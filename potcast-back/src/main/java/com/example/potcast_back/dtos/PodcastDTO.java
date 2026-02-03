@@ -6,6 +6,9 @@ import java.util.List;
 import com.example.potcast_back.model.Locutor;
 
 public class PodcastDTO implements Serializable{
+
+    private int vistas;
+
     private String id;
     private String temaGeneral;
     private String temaDia;
@@ -17,6 +20,9 @@ public class PodcastDTO implements Serializable{
     // json pierde los campos al dar enter
     private Locutor locutorPrincipal;
     private List<Locutor> invitados; 
+
+    public int getVistas() { return vistas; }
+    public void setVistas(int vistas) { this.vistas = vistas; }
 
     public Locutor getLocutorPrincipal() {
         return locutorPrincipal;

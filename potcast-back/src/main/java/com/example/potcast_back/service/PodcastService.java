@@ -60,28 +60,29 @@ public class PodcastService {
         if (dataCruda == null) return null;
         return podcastMapper.toDTO(dataCruda);
     }
-
-    // 3. LISTAR TODOS (NUEVO PARA EL DASHBOARD) ✅
     public List<PodcastDTO> listarTodos() {
-        // Obtenemos todas las claves que empiecen con "podcast:data:"
         Set<String> keys = redisTemplate.keys(KEY_DATA + "*");
         List<PodcastDTO> lista = new ArrayList<>();
 
         if (keys != null && !keys.isEmpty()) {
-            // Redis nos permite traer múltiples valores de golpe (más rápido)
             List<Object> objects = redisTemplate.opsForValue().multiGet(keys);
-            
             if (objects != null) {
                 for (Object obj : objects) {
                     if (obj != null) {
-                        lista.add(podcastMapper.toDTO(obj));
+                        PodcastDTO dto = podcastMapper.toDTO(obj);
+                        
+                        // --- MAGIA AQUÍ: Leemos las vistas de Redis ZSet ---
+                        Double score = redisTemplate.opsForZSet().score(KEY_VIEWS, dto.getId());
+                        dto.setVistas(score != null ? score.intValue() : 0);
+                        // ---------------------------------------------------
+                        
+                        lista.add(dto);
                     }
                 }
             }
         }
         return lista;
     }
-
     // 4. ELIMINAR PODCAST (NUEVO) ✅
     public void eliminarPodcast(String id) {
         // 1. Borramos la data principal

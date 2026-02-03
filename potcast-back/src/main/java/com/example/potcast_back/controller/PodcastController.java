@@ -27,9 +27,9 @@ public class PodcastController {
 
     // 2. CREAR
     @PostMapping
-    public ResponseEntity<String> crear(@RequestBody PodcastDTO podcastDTO) {
+    public ResponseEntity<PodcastDTO> crear(@RequestBody PodcastDTO podcastDTO) {
         podcastService.crearPodcast(podcastDTO);
-        return ResponseEntity.ok("Podcast guardado: " + podcastDTO.getId());
+        return ResponseEntity.ok(podcastDTO);
     }
 
     // 3. OBTENER UNO (DETALLE)
