@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: podcast-back
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 162003
+      database: 1
+      timeout: 6000ms
