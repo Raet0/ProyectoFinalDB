@@ -1,0 +1,6 @@
+docker run -d `
+  --name redis-podcast `
+  -p 6379:6379 `
+  -v ${PWD}:/data `
+  redis:7.4-alpine `
+  redis-server --requirepass "162003" --appendonly no

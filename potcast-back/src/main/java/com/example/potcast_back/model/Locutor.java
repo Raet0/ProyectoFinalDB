@@ -1,22 +1,37 @@
 package com.example.potcast_back.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+
 import java.io.Serializable;
 
+@RedisHash("locutor")
 public class Locutor implements Serializable {
+    @Id
+    private String id;
+
     private String nickname;
-    private String email;
+    private String mail;
     private String pais;
-    private String fotoUrl;
+    private String fotografiaUrl;
 
     public Locutor(){}
 
-    public Locutor(String nickname, String email, String pais, String fotoUrl) {
+    public Locutor(String id, String nickname, String mail, String pais, String fotografiaUrl) {
+        this.id = id;
         this.nickname = nickname;
-        this.email = email;
+        this.mail = mail;
         this.pais = pais;
-        this.fotoUrl = fotoUrl;
+        this.fotografiaUrl = fotografiaUrl;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNickname() {
         return nickname;
@@ -26,12 +41,12 @@ public class Locutor implements Serializable {
         this.nickname = nickname;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMail() {
+        return mail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     public String getPais() {
@@ -42,12 +57,11 @@ public class Locutor implements Serializable {
         this.pais = pais;
     }
 
-    public String getFotoUrl() {
-        return fotoUrl;
+    public String getFotografiaUrl() {
+        return fotografiaUrl;
     }
 
-    public void setFotoUrl(String fotoUrl) {
-        this.fotoUrl = fotoUrl;
+    public void setFotografiaUrl(String fotografiaUrl) {
+        this.fotografiaUrl = fotografiaUrl;
     }
-
 }

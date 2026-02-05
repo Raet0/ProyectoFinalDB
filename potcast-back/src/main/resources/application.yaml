@@ -1,7 +1,10 @@
 spring:
   application:
     name: podcast-back
-  
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
   data:
     redis:
       host: localhost
@@ -9,3 +12,7 @@ spring:
       password: 162003
       database: 1
       timeout: 6000ms
+
+app:
+  upload:
+    dir: uploads/locutores
