@@ -1,0 +1,115 @@
+<div class="min-h-screen bg-[#0d111b] text-white font-sans">
+  <div class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12">
+    <h1 class="text-3xl font-bold mb-6">Visitantes</h1>
+    <h2 class="text-[#a9b2c7] mb-8">
+      Visualiza el total de personas que han visitado la página. Los visitantes se registran automáticamente sin necesidad de crear cuenta.
+    </h2>
+
+    <!-- ESTADÍSTICAS PRINCIPALES -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-[#151b28] border border-[#2b3445] rounded-xl p-6">
+        <div class="text-[#a9b2c7] text-sm mb-2">Visitantes únicos</div>
+        <div class="text-4xl font-bold">{{ visitantesUnicos }}</div>
+      </div>
+
+      <div class="bg-[#151b28] border border-[#2b3445] rounded-xl p-6">
+        <div class="text-[#a9b2c7] text-sm mb-2">Total de visitas</div>
+        <div class="text-4xl font-bold">{{ totalVisitas }}</div>
+      </div>
+
+      <div class="bg-[#151b28] border border-[#2b3445] rounded-xl p-6">
+        <div class="text-[#a9b2c7] text-sm mb-2">Visitas promedio</div>
+        <div class="text-4xl font-bold">
+          {{ visitantesUnicos > 0 ? (totalVisitas / visitantesUnicos | number: '1.1-1') : 0 }}
+        </div>
+      </div>
+    </div>
+
+    <!-- BÚSQUEDA Y ACCIONES -->
+    <div class="bg-[#151b28] border border-[#2b3445] rounded-xl p-6 mb-8">
+      <h3 class="text-lg font-bold mb-4">Buscar visitante</h3>
+
+      <div class="flex flex-col md:flex-row gap-3 mb-4">
+        <input [(ngModel)]="searchName" (ngModelChange)="applyFilters()" name="searchName" 
+               placeholder="Buscar por nombre de visitante"
+               class="flex-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white outline-none focus:border-primary" />
+        <button (click)="applyFilters()"
+                class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/80 transition">
+          Buscar
+        </button>
+        <button (click)="clearVisitors()"
+                class="bg-red-600/20 text-red-400 px-4 py-2 rounded-lg hover:bg-red-600/40 transition">
+          Limpiar historial
+        </button>
+      </div>
+
+      <div class="text-sm text-[#a9b2c7]">
+        Mostrando {{ filteredVisitantes.length }} de {{ visitantesUnicos }} visitantes
+      </div>
+    </div>
+
+    <!-- TABLA DE VISITANTES -->
+    <div class="bg-[#151b28] border border-[#2b3445] rounded-xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-[#0d111b]">
+            <tr class="border-b border-[#2b3445]">
+              <th class="px-6 py-4 text-left text-sm font-bold">Visitante</th>
+              <th class="px-6 py-4 text-left text-sm font-bold">Visitas</th>
+              <th class="px-6 py-4 text-left text-sm font-bold">Última visita</th>
+              <th class="px-6 py-4 text-left text-sm font-bold">Duración promedio</th>
+              <th class="px-6 py-4 text-left text-sm font-bold">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let visitante of pagedVisitantes" class="border-b border-[#2b3445] hover:bg-[#0d111b] transition">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-[#1f2636] flex items-center justify-center">
+                    <span class="text-sm font-semibold">{{ visitante.id }}</span>
+                  </div>
+                  <span class="font-semibold">{{ visitante.nombre }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <span class="bg-[#1f2636] px-3 py-1 rounded-full text-sm">{{ visitante.numeroVisitas }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="text-[#a9b2c7] text-sm">{{ formatDate(visitante.ultimaVisita) }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="text-[#a9b2c7]">{{ visitante.duracionPromedio }} min</span>
+              </td>
+              <td class="px-6 py-4">
+                <span [ngClass]="getStatusColor(getVisitorStatus(visitante.ultimaVisita))" 
+                      class="px-3 py-1 rounded-full text-sm">
+                  {{ getVisitorStatus(visitante.ultimaVisita) }}
+                </span>
+              </td>
+            </tr>
+
+            <tr *ngIf="filteredVisitantes.length === 0">
+              <td colspan="5" class="px-6 py-8 text-center text-[#a9b2c7]">
+                Sin resultados
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between mt-6" *ngIf="filteredVisitantes.length > pageSize">
+      <button (click)="goToPage(currentPage - 1)"
+              [disabled]="currentPage === 1"
+              class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+        Anterior
+      </button>
+      <span class="text-sm text-[#a9b2c7]">Página {{ currentPage }} de {{ totalPages }}</span>
+      <button (click)="goToPage(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+              class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>

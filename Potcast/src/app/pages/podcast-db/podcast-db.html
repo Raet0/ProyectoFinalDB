@@ -1,0 +1,195 @@
+<div class="min-h-screen bg-[#0d111b] text-white font-sans">
+  <div class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12">
+    <h1 class="text-3xl font-bold mb-6">Base de Datos de Podcasts</h1>
+    <h2 class="text-[#a9b2c7] mb-8">
+      Visualiza todos los podcasts disponibles. Filtra por nombre, país, locutor principal y tema.
+    </h2>
+
+    <!-- FILTROS -->
+    <div class="bg-[#151b28] border border-[#2b3445] rounded-xl p-6 mb-8">
+      <h3 class="text-lg font-bold mb-4">Filtros de búsqueda</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <!-- Filtro por nombre -->
+        <div>
+          <label class="text-sm text-[#a9b2c7] block mb-2">Buscar por nombre</label>
+          <input [(ngModel)]="searchName" (ngModelChange)="applyFilters()" 
+                 placeholder="Ej: Tecnología" type="text"
+                 class="w-full px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white outline-none focus:border-primary" />
+        </div>
+
+        <!-- Filtro por país -->
+        <div>
+          <label class="text-sm text-[#a9b2c7] block mb-2">País del locutor</label>
+          <select [(ngModel)]="searchCountry" (ngModelChange)="applyFilters()"
+                  class="w-full px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white outline-none focus:border-primary">
+            <option value="">Todos los países</option>
+            <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+          </select>
+        </div>
+
+        <!-- Filtro por locutor -->
+        <div>
+          <label class="text-sm text-[#a9b2c7] block mb-2">Locutor principal</label>
+          <select [(ngModel)]="searchHost" (ngModelChange)="applyFilters()"
+                  class="w-full px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white outline-none focus:border-primary">
+            <option value="">Todos los locutores</option>
+            <option *ngFor="let host of hosts" [value]="host">{{ host }}</option>
+          </select>
+        </div>
+
+        <!-- Filtro por tema -->
+        <div>
+          <label class="text-sm text-[#a9b2c7] block mb-2">Tema del día</label>
+          <select [(ngModel)]="searchTheme" (ngModelChange)="applyFilters()"
+                  class="w-full px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white outline-none focus:border-primary">
+            <option value="">Todos los temas</option>
+            <option *ngFor="let theme of themes" [value]="theme">{{ theme }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button (click)="clearFilters()"
+                class="bg-[#1f2636] text-white px-4 py-2 rounded-lg hover:bg-[#283044] transition">
+          Limpiar filtros
+        </button>
+      </div>
+    </div>
+
+    <!-- LISTA DE PODCASTS -->
+    <div class="space-y-4">
+      <div *ngIf="filteredPodcasts.length > 0" class="text-sm text-[#a9b2c7] mb-4">
+        Mostrando {{ filteredPodcasts.length }} de {{ podcasts.length }} podcasts
+      </div>
+
+      <div *ngFor="let podcast of pagedPodcasts" class="bg-[#151b28] border border-[#2b3445] rounded-lg p-6 hover:border-primary/50 transition">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="text-lg font-bold">{{ podcast.temaGeneral }}</h3>
+            <p class="text-[#a9b2c7] text-sm">{{ podcast.temaDia }}</p>
+          </div>
+          <div class="flex gap-2">
+            <button (click)="startEdit(podcast)"
+                    class="bg-[#1f2636] text-white px-3 py-1 rounded text-sm">
+              Editar
+            </button>
+            <button (click)="deletePodcast(podcast.id)"
+                    class="bg-red-600/20 text-red-400 px-3 py-1 rounded text-sm hover:bg-red-600/40 transition">
+              Eliminar
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="editingId !== podcast.id" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Información principal -->
+          <div class="md:col-span-2">
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <div>
+                <span class="text-[#a9b2c7]">Categoría:</span>
+                <div class="font-semibold">{{ podcast.categoria || 'N/A' }}</div>
+              </div>
+              <div>
+                <span class="text-[#a9b2c7]">Fecha:</span>
+                <div class="font-semibold">{{ formatDate(podcast.fecha) }}</div>
+              </div>
+              <div>
+                <span class="text-[#a9b2c7]">Locutor:</span>
+                <div class="font-semibold">{{ podcast.locutorPrincipal?.nickname || 'N/A' }}</div>
+              </div>
+              <div>
+                <span class="text-[#a9b2c7]">País:</span>
+                <div class="font-semibold">{{ podcast.locutorPrincipal?.pais || 'N/A' }}</div>
+              </div>
+            </div>
+
+            <!-- Invitados -->
+            <div *ngIf="podcast.invitados && podcast.invitados.length > 0" class="mt-3">
+              <span class="text-[#a9b2c7] text-sm">Invitados:</span>
+              <div class="flex flex-wrap gap-2 mt-1">
+                <span *ngFor="let guest of podcast.invitados" class="bg-[#1f2636] px-2 py-1 rounded text-sm">
+                  {{ guest.nickname }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estadísticas -->
+          <div class="bg-[#0d111b] rounded-lg p-4">
+            <div class="space-y-3">
+              <div>
+                <div class="text-[#a9b2c7] text-sm">Reproducciones</div>
+                <div class="text-2xl font-bold">{{ podcast.vistas || 0 }}</div>
+              </div>
+              <div>
+                <div class="text-[#a9b2c7] text-sm">ID del Podcast</div>
+                <div class="text-xs font-mono text-[#a9b2c7]">{{ podcast.id }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="editingId === podcast.id && editingPodcast" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm text-[#a9b2c7]">Tema general</label>
+            <input [(ngModel)]="editingPodcast.temaGeneral" name="editTemaGeneral"
+                   class="w-full mt-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white" />
+          </div>
+          <div>
+            <label class="text-sm text-[#a9b2c7]">Tema del día</label>
+            <input [(ngModel)]="editingPodcast.temaDia" name="editTemaDia"
+                   class="w-full mt-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white" />
+          </div>
+          <div>
+            <label class="text-sm text-[#a9b2c7]">Categoría</label>
+            <input [(ngModel)]="editingPodcast.categoria" name="editCategoria"
+                   class="w-full mt-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white" />
+          </div>
+          <div>
+            <label class="text-sm text-[#a9b2c7]">Fecha</label>
+            <input [(ngModel)]="editingPodcast.fecha" name="editFecha" type="date"
+                   class="w-full mt-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white" />
+          </div>
+          <div>
+            <label class="text-sm text-[#a9b2c7]">URL Audio</label>
+            <input [(ngModel)]="editingPodcast.audioUrl" name="editAudioUrl"
+                   class="w-full mt-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white" />
+          </div>
+          <div>
+            <label class="text-sm text-[#a9b2c7]">Locutor</label>
+            <input [(ngModel)]="editingPodcast.locutorPrincipal.nickname" name="editLocutor"
+                   class="w-full mt-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white" />
+          </div>
+          <div class="md:col-span-2 flex justify-end gap-2">
+            <button (click)="cancelEdit()"
+                    class="bg-[#1f2636] text-white px-4 py-2 rounded-lg">
+              Cancelar
+            </button>
+            <button (click)="saveEdit()"
+                    class="bg-primary text-white px-4 py-2 rounded-lg">
+              Guardar cambios
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="filteredPodcasts.length === 0" class="text-center py-8">
+        <p class="text-[#a9b2c7]">No hay podcasts que coincidan con los filtros aplicados.</p>
+      </div>
+
+      <div class="flex items-center justify-between mt-6" *ngIf="filteredPodcasts.length > pageSize">
+        <button (click)="goToPage(currentPage - 1)"
+                [disabled]="currentPage === 1"
+                class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+          Anterior
+        </button>
+        <span class="text-sm text-[#a9b2c7]">Página {{ currentPage }} de {{ totalPages }}</span>
+        <button (click)="goToPage(currentPage + 1)"
+                [disabled]="currentPage === totalPages"
+                class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,430 @@
+<aside
+  class="w-64 h-screen fixed left-0 top-0 flex flex-col bg-[#151b28] border-r border-[#2b3445] shrink-0 overflow-y-auto z-50">
+  <!-- <div class="p-6">
+    <div class="flex items-center gap-3">
+      <div class="bg-center bg-no-repeat bg-cover rounded-full size-10 shadow-lg shadow-primary/20 bg-gradient-to-br from-primary to-primary/70"></div>
+      <div class="flex flex-col">
+        <h1 class="text-white text-xl font-bold leading-tight tracking-tight">PodMetrics</h1>
+        <p class="text-[#a9b2c7] text-xs font-normal">Admin Console</p>
+      </div>
+    </div>
+  </div> -->
+  <nav class="flex-1 px-4 flex flex-col gap-2">
+    <a routerLink="/"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary group cursor-pointer">
+      <span class="material-symbols-outlined text-[20px]">dashboard</span>
+      <span class="text-sm font-medium">Dashboard</span>
+    </a>
+    <a routerLink="/create"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a9b2c7] hover:text-white hover:bg-[#1f2636] transition">
+      <span class="material-symbols-outlined text-[20px]">add_circle</span>
+      <span class="text-sm font-medium">Crear podcast</span>
+    </a>
+    <a routerLink="/locutores"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a9b2c7] hover:text-white hover:bg-[#1f2636] transition">
+      <span class="material-symbols-outlined text-[20px]">person</span>
+      <span class="text-sm font-medium">Presentadores</span>
+    </a>
+    <a routerLink="/podcast-db"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a9b2c7] hover:text-white hover:bg-[#1f2636] transition">
+      <span class="material-symbols-outlined text-[20px]">library_music</span>
+      <span class="text-sm font-medium">Base de Podcasts</span>
+    </a>
+    <a routerLink="/paises"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a9b2c7] hover:text-white hover:bg-[#1f2636] transition">
+      <span class="material-symbols-outlined text-[20px]">public</span>
+      <span class="text-sm font-medium">Países</span>
+    </a>
+    <a routerLink="/usuarios"
+      class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#a9b2c7] hover:text-white hover:bg-[#1f2636] transition">
+      <span class="material-symbols-outlined text-[20px]">group</span>
+      <span class="text-sm font-medium">Visitantes</span>
+    </a>
+  </nav>
+  <!-- <div class="p-4 mt-auto">
+    <div class="flex items-center gap-3 px-3 py-3 rounded-xl bg-[#1f2636] border border-[#2b3445]">
+      <div class="size-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-500"></div>
+      <div class="flex flex-col overflow-hidden">
+        <p class="text-white text-sm font-medium truncate">Podcast Admin</p>
+        <p class="text-[#a9b2c7] text-xs truncate">admin@podmetrics.com</p>
+      </div>
+    </div>
+  </div> -->
+</aside>
+
+<main class="ml-64 flex-1 flex flex-col min-h-screen bg-[#141a26] text-white font-sans">
+
+  <header
+    class="w-full px-8 py-6 flex flex-col gap-4 border-b border-[#2b3445]/50 bg-[#141a26]/95 backdrop-blur z-40 sticky top-0">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 text-[#a9b2c7] text-sm">
+          <span class="material-symbols-outlined text-[16px]">home</span>
+          <span>/</span>
+          <span>Dashboard</span>
+          <span>/</span>
+          <span class="text-white">Overview</span>
+        </div>
+        <h1 class="text-white text-3xl font-bold tracking-tight">Dashboard Overview</h1>
+      </div>
+      <!-- <button routerLink="/create"
+        class="bg-white text-[#141a26] hover:bg-gray-200 text-sm font-bold px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[20px]">add</span>
+        Crear Podcast
+      </button> -->
+    </div>
+  </header>
+
+  <div class="flex-1 p-8">
+
+    <!-- QUICK STATS -->
+    <div class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-[#1f2636] border border-[#2b3445] rounded-xl p-5">
+        <p class="text-[#a9b2c7] text-xs uppercase tracking-wider">Total podcasts</p>
+        <p class="text-3xl font-bold mt-2">{{ totalPodcasts }}</p>
+      </div>
+      <div class="bg-[#1f2636] border border-[#2b3445] rounded-xl p-5">
+        <p class="text-[#a9b2c7] text-xs uppercase tracking-wider">Reproducciones</p>
+        <p class="text-3xl font-bold mt-2">{{ totalPlays }}</p>
+      </div>
+      <div class="bg-[#1f2636] border border-[#2b3445] rounded-xl p-5">
+        <p class="text-[#a9b2c7] text-xs uppercase tracking-wider">Promedio por episodio</p>
+        <p class="text-3xl font-bold mt-2">{{ avgPlays }}</p>
+      </div>
+      <div class="bg-[#1f2636] border border-[#2b3445] rounded-xl p-5">
+        <p class="text-[#a9b2c7] text-xs uppercase tracking-wider">Último episodio</p>
+        <p class="text-lg font-semibold mt-2 truncate">
+          {{ latestPodcasts[0]?.temaDia || 'Sin episodios' }}
+        </p>
+        <p class="text-xs text-[#a9b2c7] mt-1">
+          {{ latestPodcasts[0]?.fecha || '-' }}
+        </p>
+      </div>
+    </div>
+
+    <div *ngIf="allPodcasts.length === 0" class="text-center py-20 opacity-80">
+      <span class="material-symbols-outlined text-6xl mb-4">podcasts</span>
+      <h2 class="text-2xl font-bold">No hay podcasts</h2>
+      <p>Crea uno nuevo para empezar.</p>
+    </div>
+
+    <div *ngIf="allPodcasts.length > 0" class="max-w-[1400px] mx-auto grid grid-cols-12 gap-6">
+
+      <!-- HERO -->
+      <div *ngIf="mostPlayed"
+        class="col-span-12 lg:col-span-8 bg-[#1f2636] rounded-xl border border-[#2b3445] overflow-hidden relative group min-h-[380px]">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#141a26] via-transparent to-transparent z-10"></div>
+
+        <div
+          class="absolute inset-0 bg-cover bg-center opacity-70 group-hover:scale-105 transition-transform duration-700 flex items-center justify-center"
+          [style.backgroundImage]="mostPlayed.locutorPrincipal?.fotografiaUrl ? 'url(' + mostPlayed.locutorPrincipal.fotografiaUrl + ')' : 'none'"
+          [style.backgroundColor]="!mostPlayed.locutorPrincipal?.fotografiaUrl ? '#64748b' : 'transparent'">
+          <span *ngIf="!mostPlayed.locutorPrincipal?.fotografiaUrl"
+                class="material-symbols-outlined text-white/70 text-[64px]">mic</span>
+        </div>
+
+        <div class="relative z-20 p-8 h-full flex flex-col justify-end">
+          <span
+            class="bg-primary/90 backdrop-blur text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full w-fit mb-auto">
+            {{ mostPlayed.categoria }}
+          </span>
+
+          <div class="flex flex-col gap-4 max-w-2xl mt-8">
+            <h2 class="text-white text-4xl font-bold leading-tight drop-shadow-md">
+              {{ mostPlayed.temaDia }}
+            </h2>
+            <p class="text-[#d1d5db] text-lg font-normal drop-shadow-sm">
+              Host: {{ mostPlayed.locutorPrincipal?.nickname }} • {{ mostPlayed.fecha }} • 👁️ {{ mostPlayed.vistas || 0 }} reproducciones
+            </p>
+
+            <div class="flex items-center gap-6 mt-4">
+              <button [routerLink]="['/podcast', mostPlayed.id]"
+                class="bg-white text-black hover:bg-gray-100 font-sans font-semibold px-6 py-3 rounded-full flex items-center gap-2 transition-transform active:scale-95 shadow-lg">
+                <span class="material-symbols-outlined text-primary fill-1">play_arrow</span>
+                Listen Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="col-span-12 lg:col-span-4 bg-[#1f2636] rounded-xl border border-[#2b3445] flex flex-col h-full">
+
+        <div class="p-4 border-b border-[#2b3445] flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <h3 class="text-white text-lg font-bold">Biblioteca</h3>
+            <span class="text-xs text-[#a9b2c7]">{{ filteredPodcasts.length }} eps</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div class="relative">
+              <span class="absolute left-2 top-2 text-[#a9b2c7] material-symbols-outlined text-[16px]">search</span>
+              <input [(ngModel)]="filterHost" (ngModelChange)="applyFilters()" type="text" placeholder="Host..."
+                class="w-full bg-[#151b28] text-white text-xs border border-[#2b3445] rounded pl-7 pr-2 py-2 outline-none focus:border-primary">
+            </div>
+
+            <select [(ngModel)]="filterCountry" (change)="applyFilters()" class="bg-[#151b28] text-white text-xs border border-[#2b3445] rounded px-2 py-2 outline-none focus:border-primary">
+              <option value="">🌍 Todos</option>
+              <option *ngFor="let c of uniqueCountries" [value]="c">{{ c }}</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <select [(ngModel)]="filterCategory" (change)="applyFilters()" class="bg-[#151b28] text-white text-xs border border-[#2b3445] rounded px-2 py-2 outline-none focus:border-primary">
+              <option value="">📂 Categorías</option>
+              <option *ngFor="let cat of uniqueCategories" [value]="cat">{{ cat }}</option>
+            </select>
+
+            <select [(ngModel)]="sortOrder" (change)="applyFilters()" class="bg-[#151b28] text-primary font-bold text-xs border border-[#2b3445] rounded px-2 py-2 outline-none focus:border-primary cursor-pointer">
+              <option value="newest">📅 Recientes</option>
+              <option value="oldest">📅 Antiguos</option>
+              <option value="most_played">🔥 Más Oídos</option>
+              <option value="least_played">🧊 Menos Oídos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex-1 p-2 overflow-y-auto max-h-[460px]">
+          <ul class="flex flex-col gap-1">
+            <li *ngIf="filteredPodcasts.length === 0" class="text-center py-4 text-[#a9b2c7] text-xs">
+              No hay resultados para estos filtros.
+            </li>
+
+            <li *ngFor="let p of pagedLibrary" [routerLink]="['/podcast', p.id]"
+              class="flex items-center gap-3 p-3 hover:bg-[#2b3445]/50 rounded-lg transition-colors cursor-pointer group relative">
+
+              <div class="w-12 h-12 rounded bg-center bg-cover shrink-0 flex items-center justify-center"
+                [style.backgroundImage]="p.locutorPrincipal?.fotografiaUrl ? 'url(' + p.locutorPrincipal.fotografiaUrl + ')' : 'none'"
+                [style.backgroundColor]="!p.locutorPrincipal?.fotografiaUrl ? '#64748b' : 'transparent'">
+                <span *ngIf="!p.locutorPrincipal?.fotografiaUrl"
+                      class="material-symbols-outlined text-white/80 text-[20px]">mic</span>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <p class="text-white text-sm font-semibold truncate">{{ p.temaDia }}</p>
+                <div class="flex gap-2 text-[#a9b2c7] text-xs">
+                   <span>{{ p.locutorPrincipal?.nickname }}</span>
+                   <span *ngIf="p.vistas !== undefined">• 👁️ {{ p.vistas }}</span>
+                </div>
+              </div>
+
+              <button (click)="deletePodcast(p.id, $event)"
+                class="p-2 text-red-500 hover:bg-red-500/20 rounded-full opacity-0 group-hover:opacity-100 transition">
+                <span class="material-symbols-outlined text-[20px]">delete</span>
+              </button>
+            </li>
+
+          </ul>
+        </div>
+        <div class="flex items-center justify-between px-4 pb-4" *ngIf="filteredPodcasts.length > pageSizeLibrary">
+          <button (click)="goToLibraryPage(currentPageLibrary - 1)"
+                  [disabled]="currentPageLibrary === 1"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Anterior
+          </button>
+          <span class="text-xs text-[#a9b2c7]">Página {{ currentPageLibrary }} de {{ totalPagesLibrary }}</span>
+          <button (click)="goToLibraryPage(currentPageLibrary + 1)"
+                  [disabled]="currentPageLibrary === totalPagesLibrary"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Siguiente
+          </button>
+        </div>
+      </div>
+
+      <!-- ÚLTIMOS AÑADIDOS -->
+      <div class="col-span-12 lg:col-span-6 bg-[#1f2636] rounded-xl border border-[#2b3445] flex flex-col p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex flex-col">
+            <h3 class="text-white text-lg font-bold">🕒 Últimos añadidos</h3>
+            <p class="text-[#a9b2c7] text-xs">Más recientes por fecha</p>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <div *ngIf="latestPodcasts.length === 0" class="text-center py-8 text-[#a9b2c7] text-sm">
+            No hay episodios recientes
+          </div>
+          <div *ngFor="let p of latestPodcasts" [routerLink]="['/podcast', p.id]"
+               class="flex items-center gap-3 p-3 bg-[#151b28] rounded-lg border border-[#2b3445] hover:bg-[#2b3445]/50 transition cursor-pointer">
+            <div class="w-10 h-10 rounded bg-center bg-cover shrink-0 flex items-center justify-center"
+              [style.backgroundImage]="p.locutorPrincipal?.fotografiaUrl ? 'url(' + p.locutorPrincipal.fotografiaUrl + ')' : 'none'"
+              [style.backgroundColor]="!p.locutorPrincipal?.fotografiaUrl ? '#64748b' : 'transparent'">
+              <span *ngIf="!p.locutorPrincipal?.fotografiaUrl"
+                    class="material-symbols-outlined text-white/80 text-[18px]">mic</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-white text-sm font-semibold truncate">{{ p.temaDia }}</p>
+              <p class="text-[#a9b2c7] text-xs truncate">{{ p.locutorPrincipal?.nickname }} • {{ p.fecha }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORTE 1 -->
+      <div class="col-span-12 lg:col-span-6 bg-[#1f2636] rounded-xl border border-[#2b3445] flex flex-col p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex flex-col">
+            <h3 class="text-white text-lg font-bold">🎤 Top Guest Hosts</h3>
+            <p class="text-[#a9b2c7] text-xs">By appearance frequency</p>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <div *ngIf="topGuests.length === 0" class="text-center py-8 text-[#a9b2c7] text-sm">
+            No hay invitados registrados
+          </div>
+          <div *ngFor="let guest of pagedTopGuests; let i = index" class="flex items-center gap-3 p-3 bg-[#151b28] rounded-lg border border-[#2b3445]">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center text-white font-bold text-sm">
+              {{ ((currentPageTopGuests - 1) * pageSizeTopGuests) + i + 1 }}
+            </div>
+            <div class="flex-1">
+              <p class="text-white font-medium text-sm">{{ guest }}</p>
+            </div>
+            <span class="text-primary font-bold text-sm">🎙️</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-4" *ngIf="topGuests.length > pageSizeTopGuests">
+          <button (click)="goToTopGuestsPage(currentPageTopGuests - 1)"
+                  [disabled]="currentPageTopGuests === 1"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Anterior
+          </button>
+          <span class="text-xs text-[#a9b2c7]">Página {{ currentPageTopGuests }} de {{ totalPagesTopGuests }}</span>
+          <button (click)="goToTopGuestsPage(currentPageTopGuests + 1)"
+                  [disabled]="currentPageTopGuests === totalPagesTopGuests"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Siguiente
+          </button>
+        </div>
+      </div>
+
+      <!-- REPORTE: ORDENADO POR FECHA ✅ NUEVO -->
+      <div class="col-span-12 lg:col-span-6 bg-[#1f2636] rounded-xl border border-[#2b3445] flex flex-col p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex flex-col">
+            <h3 class="text-white text-lg font-bold">📅 Ordenado por Fecha</h3>
+            <p class="text-[#a9b2c7] text-xs">Lista de podcasts por fecha</p>
+          </div>
+          <select [(ngModel)]="dateOrder" (change)="changeDateOrder(dateOrder)"
+            class="bg-primary text-white text-xs font-bold px-3 py-1 rounded cursor-pointer outline-none">
+            <option value="desc">Recientes ↓</option>
+            <option value="asc">Antiguos ↑</option>
+          </select>
+        </div>
+        <div class="space-y-2 max-h-[300px] overflow-y-auto">
+          <div *ngIf="podcastsByDate.length === 0" class="text-center py-8 text-[#a9b2c7] text-sm">
+            Sin datos
+          </div>
+          <div *ngFor="let p of pagedByDate" [routerLink]="['/podcast', p.id]"
+               class="flex items-center gap-3 p-2 bg-[#151b28] rounded border border-[#2b3445] hover:bg-[#2b3445]/50 transition cursor-pointer">
+            <div class="w-8 h-8 rounded bg-center bg-cover shrink-0 flex items-center justify-center"
+              [style.backgroundImage]="p.locutorPrincipal?.fotografiaUrl ? 'url(' + p.locutorPrincipal.fotografiaUrl + ')' : 'none'"
+              [style.backgroundColor]="!p.locutorPrincipal?.fotografiaUrl ? '#64748b' : 'transparent'">
+              <span *ngIf="!p.locutorPrincipal?.fotografiaUrl"
+                    class="material-symbols-outlined text-white/80 text-[16px]">mic</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-white text-xs font-semibold truncate">{{ p.temaDia }}</p>
+              <p class="text-[#a9b2c7] text-xs truncate">{{ p.fecha }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-4" *ngIf="podcastsByDate.length > pageSizeByDate">
+          <button (click)="goToByDatePage(currentPageByDate - 1)"
+                  [disabled]="currentPageByDate === 1"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Anterior
+          </button>
+          <span class="text-xs text-[#a9b2c7]">Página {{ currentPageByDate }} de {{ totalPagesByDate }}</span>
+          <button (click)="goToByDatePage(currentPageByDate + 1)"
+                  [disabled]="currentPageByDate === totalPagesByDate"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Siguiente
+          </button>
+        </div>
+      </div>
+
+      <!-- REPORTE: ORDENADO POR REPRODUCCIONES ✅ NUEVO -->
+      <div class="col-span-12 lg:col-span-6 bg-[#1f2636] rounded-xl border border-[#2b3445] flex flex-col p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex flex-col">
+            <h3 class="text-white text-lg font-bold">🔥 Ordenado por Reproducciones</h3>
+            <p class="text-[#a9b2c7] text-xs">Top episodios por vistas</p>
+          </div>
+          <select [(ngModel)]="viewsOrder" (change)="changeViewsOrder(viewsOrder)"
+            class="bg-primary text-white text-xs font-bold px-3 py-1 rounded cursor-pointer outline-none">
+            <option value="desc">Más Vistas ↓</option>
+            <option value="asc">Menos Vistas ↑</option>
+          </select>
+        </div>
+        <div class="space-y-2 max-h-[300px] overflow-y-auto">
+          <div *ngIf="podcastsByViews.length === 0" class="text-center py-8 text-[#a9b2c7] text-sm">
+            Sin datos
+          </div>
+          <div *ngFor="let p of pagedByViews; let i = index" [routerLink]="['/podcast', p.id]"
+               class="flex items-center gap-3 p-2 bg-[#151b28] rounded border border-[#2b3445] hover:bg-[#2b3445]/50 transition cursor-pointer">
+            <div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs shrink-0">
+              {{ ((currentPageByViews - 1) * pageSizeByViews) + i + 1 }}
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-white text-xs font-semibold truncate">{{ p.temaDia }}</p>
+              <p class="text-[#a9b2c7] text-xs">👁️ {{ p.vistas || 0 }} reproducciones</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-4" *ngIf="podcastsByViews.length > pageSizeByViews">
+          <button (click)="goToByViewsPage(currentPageByViews - 1)"
+                  [disabled]="currentPageByViews === 1"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Anterior
+          </button>
+          <span class="text-xs text-[#a9b2c7]">Página {{ currentPageByViews }} de {{ totalPagesByViews }}</span>
+          <button (click)="goToByViewsPage(currentPageByViews + 1)"
+                  [disabled]="currentPageByViews === totalPagesByViews"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Siguiente
+          </button>
+        </div>
+      </div>
+
+      <!-- REPORTE 2 -->
+      <div class="col-span-12 lg:col-span-6 bg-[#1f2636] rounded-xl border border-[#2b3445] flex flex-col p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex flex-col">
+            <h3 class="text-white text-lg font-bold">🌍 Locutores por País</h3>
+            <p class="text-[#a9b2c7] text-xs">Distribution by country</p>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <div *ngIf="uniqueCountries.length === 0" class="text-center py-8 text-[#a9b2c7] text-sm">
+            No hay países registrados
+          </div>
+          <div *ngFor="let country of pagedCountries" class="flex items-start gap-3 p-3 bg-[#151b28] rounded-lg border border-[#2b3445]">
+            <div class="flex-1">
+              <p class="text-white font-bold text-sm mb-2">{{ country }}</p>
+              <div class="flex flex-wrap gap-1">
+                <span *ngFor="let locutor of getLocutoresForCountry(country)"
+                  class="bg-primary/20 text-primary text-xs px-2 py-1 rounded-full">
+                  {{ locutor }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-4" *ngIf="uniqueCountries.length > pageSizeCountries">
+          <button (click)="goToCountriesPage(currentPageCountries - 1)"
+                  [disabled]="currentPageCountries === 1"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Anterior
+          </button>
+          <span class="text-xs text-[#a9b2c7]">Página {{ currentPageCountries }} de {{ totalPagesCountries }}</span>
+          <button (click)="goToCountriesPage(currentPageCountries + 1)"
+                  [disabled]="currentPageCountries === totalPagesCountries"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Siguiente
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>

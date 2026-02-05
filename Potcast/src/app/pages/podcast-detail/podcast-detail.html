@@ -1,0 +1,128 @@
+<div class="min-h-screen bg-[#101622] text-white font-sans flex flex-col">
+
+  <div class="w-full border-b border-solid border-[#282e39] bg-[#101622]">
+    <div class="flex items-center justify-between whitespace-nowrap px-4 py-3 md:px-10 max-w-[1440px] mx-auto w-full">
+      <div class="flex items-center gap-4 md:gap-8">
+        <a routerLink="/" class="flex items-center gap-4 text-white cursor-pointer hover:text-primary transition">
+          <div class="size-8 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined !text-[32px]">graphic_eq</span>
+          </div>
+          <h2 class="text-lg font-bold leading-tight hidden sm:block">PodMetrics</h2>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="flex-1 flex justify-center items-center">
+    <div class="flex flex-col items-center gap-4">
+      <span class="material-symbols-outlined text-6xl animate-spin">radio</span>
+      <p class="text-[#9da6b9]">Cargando episodio...</p>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && podcast" class="flex-1 flex justify-center py-8 px-4 md:px-10">
+    <div class="w-full max-w-[1024px] flex flex-col gap-8">
+
+      <div class="flex flex-wrap gap-2 items-center text-sm">
+        <a routerLink="/" class="text-[#9da6b9] font-medium hover:text-white transition">Home</a>
+        <span class="text-[#9da6b9] material-symbols-outlined text-[16px]">chevron_right</span>
+        <span class="text-white font-medium">{{ podcast.categoria }}</span>
+      </div>
+
+      <div class="flex flex-col gap-6">
+        <div class="flex">
+          <div class="flex h-8 items-center justify-center gap-x-2 rounded-full bg-[#282e39] px-4">
+            <span class="material-symbols-outlined text-[18px] text-primary">hub</span>
+            <p class="text-white text-xs font-bold uppercase tracking-wide">{{ podcast.temaGeneral }}</p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2">
+          <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1]">
+            {{ podcast.temaDia }}
+          </h1>
+          <div class="flex items-center gap-2 text-[#9da6b9] mt-2">
+            <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+            <p class="text-lg font-medium">{{ podcast.fecha }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full bg-[#1C212E] border border-[#282e39] rounded-xl p-6 md:p-8 shadow-sm">
+        <div class="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start">
+
+          <div class="size-32 md:size-40 rounded-lg shrink-0 bg-cover bg-center shadow-md relative group overflow-hidden bg-slate-700 flex items-center justify-center"
+               [style.background-image]="podcast.locutorPrincipal?.fotografiaUrl ? 'url(' + podcast.locutorPrincipal.fotografiaUrl + ')' : 'none'"
+               [style.background-color]="!podcast.locutorPrincipal?.fotografiaUrl ? '#475569' : 'transparent'">
+            <span *ngIf="!podcast.locutorPrincipal?.fotografiaUrl"
+                  class="material-symbols-outlined text-white/80 text-[48px]">mic</span>
+
+            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="material-symbols-outlined text-white text-[48px]">play_circle</span>
+            </div>
+          </div>
+
+          <div class="flex-1 w-full flex flex-col justify-between gap-6 md:h-40 py-1">
+            <div class="flex flex-col gap-1">
+              <h3 class="text-xl md:text-2xl font-bold text-white">Episode: {{ podcast.temaDia }}</h3>
+              <p class="text-[#9da6b9]">Hosted by <span class="font-semibold">{{ podcast.locutorPrincipal?.nickname }}</span></p>
+              <p class="text-[#9da6b9] text-sm">📍 {{ podcast.locutorPrincipal?.pais }}</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <button (click)="togglePlay()"
+                class="flex-1 md:flex-none bg-white hover:bg-gray-100 text-black font-bold py-3 px-8 rounded-full flex items-center justify-center gap-2 transition-all active:scale-95">
+                <span class="material-symbols-outlined">{{ isPlaying ? 'pause' : 'play_arrow' }}</span>
+                {{ isPlaying ? 'Pausar' : 'Reproducir' }}
+              </button>
+              <button (click)="toggleSubscribe()"
+                class="bg-primary/20 hover:bg-primary/30 text-primary font-bold py-3 px-6 rounded-full transition-colors">
+                <span class="material-symbols-outlined">{{ isSubscribed ? 'notifications_active' : 'notifications_none' }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="podcast.invitados && podcast.invitados.length > 0" class="w-full bg-[#1C212E] border border-[#282e39] rounded-xl p-6">
+        <h3 class="text-xl font-bold text-white mb-4">🎙️ Guest Hosts</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div *ngFor="let guest of podcast.invitados" class="bg-[#111318] border border-[#282e39] rounded-lg p-4 flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-cover bg-center shrink-0 bg-slate-700 flex items-center justify-center"
+              [style.background-image]="guest.fotografiaUrl ? 'url(' + guest.fotografiaUrl + ')' : 'none'"
+              [style.background-color]="!guest.fotografiaUrl ? '#475569' : 'transparent'">
+              <span *ngIf="!guest.fotografiaUrl"
+                    class="material-symbols-outlined text-white/80 text-[20px]">mic</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-white font-semibold text-sm">{{ guest.nickname }}</p>
+              <p class="text-[#9da6b9] text-xs">{{ guest.pais }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full bg-[#1C212E] border border-[#282e39] rounded-xl p-6">
+        <h3 class="text-xl font-bold text-white mb-4">ℹ️ Información</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div class="flex justify-between">
+            <span class="text-[#9da6b9]">Categoría:</span>
+            <span class="text-white font-semibold">{{ podcast.categoria }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#9da6b9]">Fecha:</span>
+            <span class="text-white font-semibold">{{ podcast.fecha }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#9da6b9]">Locutor Principal:</span>
+            <span class="text-white font-semibold">{{ podcast.locutorPrincipal?.nickname }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#9da6b9]">Email:</span>
+            <span class="text-white font-semibold">{{ podcast.locutorPrincipal?.mail }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

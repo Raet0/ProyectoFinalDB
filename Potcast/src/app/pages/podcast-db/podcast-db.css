@@ -1,0 +1,29 @@
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.filter-section {
+  margin-bottom: 2rem;
+}
+
+.podcast-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.podcast-card {
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.podcast-card:hover {
+  box-shadow: 0 0 20px rgba(79, 146, 234, 0.2);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,103 @@
+<div class="min-h-screen bg-[#0d111b] text-white font-sans">
+  <div class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12">
+    <h1 class="text-3xl font-bold mb-6">Países</h1>
+    <h2 class="text-[#a9b2c7] mb-8">
+      Gestiona y visualiza los países donde se producen podcasts. Crea nuevos países o elimina los existentes.
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- FORMULARIO PARA CREAR PAÍS -->
+      <div class="bg-[#151b28] border border-[#2b3445] rounded-xl p-6">
+        <h3 class="text-lg font-bold mb-4">Crear país</h3>
+
+        <form (ngSubmit)="addCountry()" class="flex flex-col gap-4">
+          <div>
+            <label class="text-sm text-[#a9b2c7]">Nombre del país</label>
+            <input [(ngModel)]="newCountryName" name="countryName" required placeholder="Ej: Colombia"
+                   class="w-full mt-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white outline-none focus:border-primary" />
+          </div>
+
+          <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/80 transition">
+              Crear país
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- PANEL DE BÚSQUEDA -->
+      <div class="bg-[#151b28] border border-[#2b3445] rounded-xl p-6">
+        <h3 class="text-lg font-bold mb-4">Buscar / Listar países</h3>
+
+        <div class="flex gap-3 mb-4">
+          <input [(ngModel)]="searchName" (ngModelChange)="applyFilters()" name="searchName" placeholder="Buscar por nombre del país"
+                 class="flex-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white outline-none focus:border-primary" />
+          <button (click)="clearSearch()"
+                  class="bg-[#1f2636] text-white px-4 py-2 rounded-lg hover:bg-[#283044] transition">
+            Limpiar
+          </button>
+        </div>
+
+        <div class="text-sm text-[#a9b2c7]">
+          Mostrando {{ filteredPaises.length }} de {{ paises.length }} países
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLA DE PAÍSES -->
+    <div class="mt-8 bg-[#151b28] border border-[#2b3445] rounded-xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-[#0d111b]">
+            <tr class="border-b border-[#2b3445]">
+              <th class="px-6 py-4 text-left text-sm font-bold">País</th>
+              <th class="px-6 py-4 text-left text-sm font-bold">Podcasts</th>
+              <th class="px-6 py-4 text-left text-sm font-bold">Locutores</th>
+              <th class="px-6 py-4 text-center text-sm font-bold">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pais of pagedPaises" class="border-b border-[#2b3445] hover:bg-[#0d111b] transition">
+              <td class="px-6 py-4">
+                <span class="font-semibold">{{ pais.nombre }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="bg-[#1f2636] px-3 py-1 rounded-full text-sm">{{ pais.podcasts }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="bg-[#1f2636] px-3 py-1 rounded-full text-sm">{{ pais.locutores }}</span>
+              </td>
+              <td class="px-6 py-4 text-center">
+                <button (click)="deleteCountry(pais.nombre)"
+                        class="bg-red-600/20 text-red-400 px-3 py-1 rounded text-sm hover:bg-red-600/40 transition">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="filteredPaises.length === 0">
+              <td colspan="4" class="px-6 py-8 text-center text-[#a9b2c7]">
+                Sin resultados
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between mt-6" *ngIf="filteredPaises.length > pageSize">
+      <button (click)="goToPage(currentPage - 1)"
+              [disabled]="currentPage === 1"
+              class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+        Anterior
+      </button>
+      <span class="text-sm text-[#a9b2c7]">Página {{ currentPage }} de {{ totalPages }}</span>
+      <button (click)="goToPage(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+              class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+        Siguiente
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="min-h-screen bg-[#0d111b] text-white font-sans">
+  <div class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12">
+    <h1 class="text-3xl font-bold mb-6">Locutores</h1>
+    <h2 class="text-[#a9b2c7] mb-8">
+      Sección para ver todos los presentadores existentes sin crear, también puedes crear nuevos presentadores.
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- FORMULARIO -->
+      <div class="bg-[#151b28] border border-[#2b3445] rounded-xl p-6">
+        <h3 class="text-lg font-bold mb-4">Crear locutor</h3>
+
+        <form (ngSubmit)="createLocutor()" class="grid grid-cols-1 gap-4">
+          <div>
+            <label class="text-sm text-[#a9b2c7]">Nombre (nickname)</label>
+            <input [(ngModel)]="form.nickname" name="nickname" required
+                   class="w-full mt-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white outline-none focus:border-primary" />
+          </div>
+
+          <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/80 transition">
+              Guardar locutor
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- PANEL DERECHO -->
+      <div class="bg-[#151b28] border border-[#2b3445] rounded-xl p-6">
+        <h3 class="text-lg font-bold mb-4">Buscar / Listar locutores</h3>
+
+        <div class="flex flex-col md:flex-row gap-3 mb-4">
+          <input [(ngModel)]="searchNickname" name="searchNickname" placeholder="Buscar por nickname"
+                 class="flex-1 px-3 py-2 bg-[#0d111b] border border-[#2b3445] rounded text-white outline-none focus:border-primary" />
+          <button (click)="searchLocutor()"
+                  class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/80 transition">
+            Buscar
+          </button>
+          <button (click)="loadAll()"
+                  class="bg-[#1f2636] text-white px-4 py-2 rounded-lg hover:bg-[#283044] transition">
+            Mostrar todos
+          </button>
+        </div>
+
+        <div class="space-y-3 max-h-[520px] overflow-y-auto">
+          <div *ngFor="let l of pagedLocutores" class="bg-[#0d111b] border border-[#2b3445] rounded-lg p-4 flex gap-4 items-center">
+            <img *ngIf="l.fotografiaUrl" [src]="apiBase + l.fotografiaUrl" class="w-12 h-12 rounded-full object-cover" />
+            <div class="flex-1">
+              <div class="font-semibold">{{ l.nickname }}</div>
+              <div class="text-sm text-[#a9b2c7]">{{ l.mail }} · {{ l.pais }}</div>
+            </div>
+          </div>
+
+          <div *ngIf="locutores.length === 0" class="text-sm text-[#a9b2c7]">
+            Sin resultados.
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between mt-4" *ngIf="locutores.length > pageSize">
+          <button (click)="goToPage(currentPage - 1)"
+                  [disabled]="currentPage === 1"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Anterior
+          </button>
+          <span class="text-sm text-[#a9b2c7]">Página {{ currentPage }} de {{ totalPages }}</span>
+          <button (click)="goToPage(currentPage + 1)"
+                  [disabled]="currentPage === totalPages"
+                  class="bg-[#1f2636] text-white px-3 py-2 rounded-lg disabled:opacity-50">
+            Siguiente
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
